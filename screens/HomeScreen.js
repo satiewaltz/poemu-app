@@ -3,7 +3,7 @@ import {
   StyleSheet, Text, View, Image
 } from 'react-native';
 
-import { Button, Divider } from 'react-native-elements';
+import { Button } from 'react-native-elements';
 
 export default class HomeScreen extends React.Component {
 
@@ -17,6 +17,8 @@ export default class HomeScreen extends React.Component {
 
   render() {
     const resizeMode = 'center';
+    // const preview = { uri: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGYAAABNAQMAAABueoPUAAAABlBMVEVHcEz///+flKJDAAAAAnRSTlMAf7YpoZUAAABwSURBVHgBY8AL2FB47Ki8BmQeI5BHBmDD5FXAeEwg4g+cgwkqcBgqg8KrwcP7gYeXQII3WFB4fODQQMgxPkAJqQ8oigtQeAq4A4cPjTe4gQEKTwCNN0SABUZy44DHIkpiYUblIccwPPYxUzEjw1AFALiZDmS4ykeDAAAAAElFTkSuQmCC" };
+    // const uri = require('../assets/flowers.gif');
 
     return (
       <View style={styles.container}>
@@ -28,18 +30,18 @@ export default class HomeScreen extends React.Component {
             height: '100%',
             justifyContent: 'center'
           }}
-          source={require('../assets/flowers.gif')}></Image>
+          source={require('../assets/flowers.gif')}/>
         <Image
           style={
             {
               width: 200, height: 90,
               marginBottom: -15
             }}
-          source={require('../assets/lily.gif')}></Image>
+          source={require('../assets/lily.gif')}/>
 
         <Text style={styles.appTitle}>poemu</Text>
         <Text style={styles.appMotto}>drops of distant thoughts</Text>
-        <Divider style={{height: 1, backgroundColor: '#e1e8ee'}	} />
+
         <Button
           onPress={this._handlePress}
           title='Create Poem'

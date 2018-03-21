@@ -3,7 +3,72 @@ import {
   StyleSheet, Text, View, Image
 } from 'react-native';
 
-import { Button, Header } from 'react-native-elements';
+import AppHeader from '../elements/Header';
+import { List, ListItem } from 'react-native-elements'
+
+
+
+const list = [
+  {
+    poem: `I come with no wrapping or pretty pink bows.
+            I am who I am, from my head to my toes.
+            I tend to get loud when speaking my mind.
+            Even a little crazy some of the time.
+
+Source: https://www.familyfriendpoems.com/poems/other/short/`,
+    avatar_url: 'https://s3.amazonaws.com/uifaces/faces/twitter/ladylexy/128.jpg',
+    subtitle: 'Vice President'
+  },
+  {
+    poem: `In all chaotic beauty lies a wounded work of art.
+Beautiful but torn, wreaking havoc on my heart.
+Camouflaged by insecurities, blinded by it all.
+I love the way you sit there and barely notice me at all.
+
+Source: https://www.familyfriendpoems.com/poems/other/short/`,
+    avatar_url: 'https://s3.amazonaws.com/uifaces/faces/twitter/adhamdannaway/128.jpg',
+    subtitle: 'Vice Chairman'
+  },
+  {
+    poem: `I come with no wrapping or pretty pink bows.
+            I am who I am, from my head to my toes.
+            I tend to get loud when speaking my mind.
+            Even a little crazy some of the time.
+
+Source: https://www.familyfriendpoems.com/poems/other/short/`,
+    avatar_url: 'https://s3.amazonaws.com/uifaces/faces/twitter/ladylexy/128.jpg',
+    subtitle: 'Vice President'
+  },
+  {
+    poem: `In all chaotic beauty lies a wounded work of art.
+Beautiful but torn, wreaking havoc on my heart.
+Camouflaged by insecurities, blinded by it all.
+I love the way you sit there and barely notice me at all.
+
+Source: https://www.familyfriendpoems.com/poems/other/short/`,
+    avatar_url: 'https://s3.amazonaws.com/uifaces/faces/twitter/adhamdannaway/128.jpg',
+    subtitle: 'Vice Chairman'
+  },  {
+    poem: `I come with no wrapping or pretty pink bows.
+            I am who I am, from my head to my toes.
+            I tend to get loud when speaking my mind.
+            Even a little crazy some of the time.
+
+Source: https://www.familyfriendpoems.com/poems/other/short/`,
+    avatar_url: 'https://s3.amazonaws.com/uifaces/faces/twitter/ladylexy/128.jpg',
+    subtitle: 'Vice President'
+  },
+  {
+    poem: `In all chaotic beauty lies a wounded work of art.
+Beautiful but torn, wreaking havoc on my heart.
+Camouflaged by insecurities, blinded by it all.
+I love the way you sit there and barely notice me at all.
+
+Source: https://www.familyfriendpoems.com/poems/other/short/`,
+    avatar_url: 'https://s3.amazonaws.com/uifaces/faces/twitter/adhamdannaway/128.jpg',
+    subtitle: 'Vice Chairman'
+  },
+]
 
 export default class PoemListScreen extends React.Component {
   static navigationOptions = {
@@ -12,21 +77,21 @@ export default class PoemListScreen extends React.Component {
 
   render() {
     return (
-      <View>
-        <Header
-          leftComponent={{ icon: 'menu', color: '#fff' }}
-          centerComponent={{
-            text: 'Poems of the World', style: { color: '#fff' }
-          }}
-          rightComponent={{
-            icon: 'home',
-            color: '#fff',
-            onPress: this._handlePress
-          }}
-          backgroundColor='#fc7475'
-        />
-        <View style={styles.container}>
-          <Text style={styles.appText} onPress={this._handlePress}>HomeScreen!</Text>
+      <View style={{ flex: 1 }}>
+        <AppHeader/>
+        <View>
+          <List containerStyle={{marginBottom: 20}}>
+            {
+              list.map((l, i) => (
+                <ListItem
+                  roundAvatar
+                  avatar={{uri:l.avatar_url}}
+                  key={i}
+                  title={l.poem}
+                />
+              ))
+            }
+          </List>
         </View>
       </View>
     )
@@ -37,10 +102,14 @@ export default class PoemListScreen extends React.Component {
   }
 }
 
+
+
+
+
+
 const styles = StyleSheet.create({
   container: {
-    width: '100%',
-    height: '90%',
+    flex: 1,
     backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
