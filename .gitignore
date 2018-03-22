@@ -1,6 +1,8 @@
 node_modules/**/*
 .expo/*
 npm-debug.*
+.env
+env
 
 # Logs
 logs
