@@ -2,7 +2,6 @@
 import React from 'react';
 import {
   ActivityIndicator,
-  Button,
   Clipboard,
   Image,
   Share,
@@ -14,13 +13,33 @@ import {
 } from 'react-native';
 import Exponent, { Constants, ImagePicker, registerRootComponent } from 'expo';
 
-import { Input } from 'react-native-elements';
+import { Input, Button } from 'react-native-elements';
 import { RNS3 } from 'react-native-aws3';
 import axios from 'axios'
 import { ACCESS_KEY, SECRET_KEY } from 'react-native-dotenv';
 
 const accessKey = ACCESS_KEY;
 const secretKey = SECRET_KEY;
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#fc7475',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  cameraButtons: {
+    backgroundColor: "#fff",
+    width: 135,
+    height: 35,
+    borderColor: "transparent",
+    borderWidth: 0,
+    borderRadius: 100,
+    marginTop: 10,
+    marginHorizontal: 3,
+    // fontWeight: '100'
+  }
+});
 
 export default class CameraView extends React.Component {
   state = {
@@ -34,42 +53,45 @@ export default class CameraView extends React.Component {
     let { image } = this.state;
 
     return (
-      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+      <View style={ styles.container }>
         <Text
           style={{
             fontSize: 15,
             marginBottom: 20,
             textAlign: 'center',
             marginHorizontal: 15,
-            // width: 100,
+            color: "#fff",
             fontWeight: '100',
           }}>
           Leave a thought on a picture of yours.{"\n"}
-          Be mindful, you've got { this.state.wordCount } words to use.
+          Be mindful, you've got { this.state.wordCount > -1 ? this.state.wordCount : 0 } words to use.
         </Text>
 
         <View
           style={{
             flexDirection: 'row',
-            alignItems: 'center',
-            justifyContent: 'center',
+            alignItems: 'stretch',
+            justifyContent: 'space-around',
             marginTop: -8
           }}>
           <Button
-            style={{
-              fontSize: 10,
+            titleStyle={{
+              color: "#fc7475",
+              fontWeight: '100',
+              fontSize: 13,
             }}
-            color="#fc7475"
+            buttonStyle={styles.cameraButtons}
             onPress={this._pickImage}
-            title="Camera Roll"
-          />
+            title="Camera Roll"/>
           <Button
-            style={{
-              fontSize: 10,
+            titleStyle={{
+              color: "#fc7475",
+              fontWeight: '100',
+              fontSize: 13,
             }}
-            color="#fc7475"
+            buttonStyle={styles.cameraButtons}
             onPress={this._takePhoto}
-              title="Take a Photo" />
+            title="Take a Photo"/>
        </View>
 
         {this._maybeRenderImage()}
@@ -82,39 +104,43 @@ export default class CameraView extends React.Component {
           placeholderTextColor='#ccc'
           onChangeText={(text) =>
             this.setState({
-                text,
-                wordCount: 6 - text.split(' ').length ? 6 - text.split(' ').length : 0
-              })}
+              text,
+              wordCount: 6 - text.split(' ').length ? 6 - text.split(' ').length : 0
+            })}
           value={this.state.text}
           shake={true}
           containerStyle={{
             // width: 135,
             // height: 35,
+            backgroundColor: '#7476fc',
             borderColor: "#fc7475",
             borderWidth: 1,
             borderRadius: 100,
             marginTop: 14
           }}
+          inputStyle={{ color: "#fff", fontWeight: '300'}}
         />
+
         {
+          // Hide submit if word count is too high.
           this.state.wordCount > 0 &&
-          <Button
-          onPress={this._maybeRenderImage}
-          title='Submit'
-          titleStyle={{
-            color: "#fff",
-            fontSize: 13,
-          }}
-          buttonStyle={{
-            backgroundColor: "#fc7475",
-            width: 135,
-            height: 35,
-            borderColor: "transparent",
-            borderWidth: 0,
-            borderRadius: 100,
-            marginTop: 15
-          }}
-          />
+            <Button
+              onPress={this._maybeRenderImage}
+              title='Submit'
+              titleStyle={{
+                color: "#fff",
+                fontWeight: '100',
+                fontSize: 13,
+              }}
+              buttonStyle={{
+                backgroundColor: "#6fe86d",
+                width: 135,
+                height: 35,
+                borderColor: "transparent",
+                borderWidth: 0,
+                borderRadius: 100,
+                marginTop: 15
+              }}/>
         }
         </View>
     );
