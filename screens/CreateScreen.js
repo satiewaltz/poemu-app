@@ -10,6 +10,7 @@ import {
   Text,
   TouchableOpacity,
   View,
+  ScrollView
 } from 'react-native';
 import Exponent, { Constants, ImagePicker, registerRootComponent } from 'expo';
 
@@ -20,6 +21,9 @@ import { ACCESS_KEY, SECRET_KEY } from 'react-native-dotenv';
 
 import AppHeader from '../elements/Header';
 
+import Filter from 'bad-words';
+
+const filter = new Filter({ placeHolder: 'x' });
 const accessKey = ACCESS_KEY;
 const secretKey = SECRET_KEY;
 
@@ -38,7 +42,7 @@ const styles = StyleSheet.create({
     borderWidth: 0,
     borderRadius: 100,
     marginTop: 10,
-    marginHorizontal: 3,
+    marginHorizontal: 2,
     // fontWeight: '100'
   }
 });
@@ -55,27 +59,33 @@ export default class CameraView extends React.Component {
     let { image } = this.state;
 
     return (
-      <View style={{ flex: 1 }}>
-        <AppHeader />
+      <View style={{flex:1}}>
+      <AppHeader />
         <View style={styles.container}>
+          <ScrollView style={{ paddingVertical: 20 }}
+          contentContainerStyle={
+              {
+                alignItems: 'center',
+                justifyContent: 'center'
+              }
+          }>
           <Text
             style={{
               fontSize: 15,
               marginBottom: 20,
               textAlign: 'center',
-              marginHorizontal: 15,
               color: "#fff",
               fontWeight: '100',
             }}>
-            Leave a thought on a picture of yours.{"\n"}
-            Be mindful, you've got { this.state.wordCount > -1 ? this.state.wordCount : 0 } words to use.
+            Leave a few words for the world.{"\n"}
+            Be mindful, you've only got { this.state.wordCount > -1 ? this.state.wordCount : 0 } words to use.
           </Text>
 
           <View
             style={{
               flexDirection: 'row',
-              alignItems: 'stretch',
-              justifyContent: 'space-around',
+              justifyContent: 'center',
+              width: 300,
               marginTop: -8
             }}>
             <Button
@@ -96,30 +106,36 @@ export default class CameraView extends React.Component {
               buttonStyle={styles.cameraButtons}
               onPress={this._takePhoto}
               title="Take a Photo"/>
-        </View>
+          </View>
           <StatusBar barStyle="default" />
 
-          <Input
-            placeholder='Share your words.'
-            placeholderTextColor='#ccc'
-            onChangeText={(text) =>
-              this.setState({
-                text: text === "" ? null : text,
-                wordCount: 6 - text.split(' ').length ? 6 - text.split(' ').length : 0
-              })}
-            value={this.state.text}
-            shake={true}
-            containerStyle={{
-              // width: 135,
-              // height: 35,
-              backgroundColor: '#7476fc',
-              borderColor: "#fc7475",
-              borderWidth: 1,
-              borderRadius: 100,
-              marginTop: 14
-            }}
-            inputStyle={{ color: "#fff", fontWeight: '300'}}
-          />
+          <View
+            style={{
+              flexDirection: 'row',
+                justifyContent: 'center',
+                width: 300,
+            }}>
+            <Input
+              placeholder='Share your words.'
+              placeholderTextColor='#ccc'
+              onChangeText={(text) =>
+                this.setState({
+                  text: text === "" ? null : filter.clean(text),
+                  wordCount: 6 - text.split(' ').length ? 6 - text.split(' ').length : 0
+                })}
+              value={this.state.text}
+              shake={true}
+              containerStyle={{
+                // width: 135,
+                height: 45,
+                backgroundColor: '#7476fc',
+                borderColor: "#fc7475",
+                borderWidth: 1,
+                borderRadius: 70,
+                marginTop: 15
+              }}
+              inputStyle={{ color: "#fff", fontWeight: '300'}}/>
+          </View>
 
           {
             // Hide submit if word count is too high.
@@ -146,8 +162,9 @@ export default class CameraView extends React.Component {
           {this._maybeRenderImage()}
           {this._maybeRenderUploadingOverlay()}
 
-          </View>
+        </ScrollView>
         </View>
+      </View>
     );
   }
 
@@ -180,6 +197,7 @@ export default class CameraView extends React.Component {
         style={{
           marginTop: 30,
           width: 300,
+          alignSelf: "center",
           borderRadius: 3,
           elevation: 2,
           shadowColor: 'rgba(0,0,0,1)',
@@ -193,7 +211,7 @@ export default class CameraView extends React.Component {
             borderTopLeftRadius: 3,
             overflow: 'hidden',
           }}>
-          <Image source={{ uri: image }} style={{ width: 250, height: 250 }} />
+          <Image source={{ uri: image }} style={{ width: 300, height: 300 }} />
         </View>
 
         {/* <Text
@@ -324,7 +342,7 @@ async function uploadImageAsync(uri, text) {
 
       axios.post('http://192.168.1.3:3000/addpic', {
         url: decodeURIComponent(response.body.postResponse.location),
-        text
+        text: filter.clean(text)
       })
       .then(function (response) {
         console.log(response);

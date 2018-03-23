@@ -10,7 +10,7 @@ const AppHeader = (props) =>
       onPress: () => props.navigation.navigate('Create')
     }}
     centerComponent={{
-      text: 'Poems of the World', style: { color: '#fff' }
+      text: 'Poems of the World', style: { color: '#fff', fontWeight: '100' }
     }}
     rightComponent={{
       icon: 'home',

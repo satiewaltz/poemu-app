@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-  StyleSheet, Text, View, Image, ScrollView
+  StyleSheet, Text, View, Image, ScrollView, ActivityIndicator
 } from 'react-native';
 
 import AppHeader from '../elements/Header';
@@ -29,21 +29,39 @@ export default class PoemListScreen extends React.Component {
       .catch((err) => console.log(err));
   }
 
+  _maybeRenderUploadingOverlay = () => {
+    if (this.state.isLoading) {
+      return (
+        <View
+          style={[
+            StyleSheet.absoluteFill,
+            {
+              backgroundColor: 'rgba(255,255,255,0.0)',
+              alignItems: 'center',
+              justifyContent: 'center',
+            },
+          ]}>
+          <ActivityIndicator color="#fc7475" size="large" />
+        </View>
+      );
+    }
+  };
+
   render() {
     return (
       <View style={{ flex: 1 }}>
         <AppHeader/>
 
+        {this._maybeRenderUploadingOverlay()}
         <ScrollView>
-            { !this.state.isLoading &&
-              this.state.poems.reverse().map((l, i) => (
-                <Card key={i} containerStyle={{ padding: 0 }} image={{uri: l.url}}>
-                  <Text style={{marginBottom: 10}}>
-                    {l.text}
-                  </Text>
-                </Card>
-              ))
-            }
+          { !this.state.isLoading &&
+            this.state.poems.reverse().map((l, i) => (
+              <Card key={i} containerStyle={{ padding: 0 }} image={{uri: l.url}}>
+              <Text style={{marginBottom: 10}}>
+                A traveler says: {l.text}
+              </Text>
+            </Card>
+          ))}
         </ScrollView>
       </View>
     )
