@@ -162,10 +162,10 @@ export default class CameraView extends React.Component {
           }
 
           {this._maybeRenderImage()}
-          {this._maybeRenderUploadingOverlay()}
 
         </ScrollView>
         </View>
+        {this._maybeRenderUploadingOverlay()}
       </View>
     );
   }
