@@ -18,6 +18,8 @@ import { RNS3 } from 'react-native-aws3';
 import axios from 'axios'
 import { ACCESS_KEY, SECRET_KEY } from 'react-native-dotenv';
 
+import AppHeader from '../elements/Header';
+
 const accessKey = ACCESS_KEY;
 const secretKey = SECRET_KEY;
 
@@ -53,95 +55,98 @@ export default class CameraView extends React.Component {
     let { image } = this.state;
 
     return (
-      <View style={ styles.container }>
-        <Text
-          style={{
-            fontSize: 15,
-            marginBottom: 20,
-            textAlign: 'center',
-            marginHorizontal: 15,
-            color: "#fff",
-            fontWeight: '100',
-          }}>
-          Leave a thought on a picture of yours.{"\n"}
-          Be mindful, you've got { this.state.wordCount > -1 ? this.state.wordCount : 0 } words to use.
-        </Text>
-
-        <View
-          style={{
-            flexDirection: 'row',
-            alignItems: 'stretch',
-            justifyContent: 'space-around',
-            marginTop: -8
-          }}>
-          <Button
-            titleStyle={{
-              color: "#fc7475",
+      <View style={{ flex: 1 }}>
+        <AppHeader />
+        <View style={styles.container}>
+          <Text
+            style={{
+              fontSize: 15,
+              marginBottom: 20,
+              textAlign: 'center',
+              marginHorizontal: 15,
+              color: "#fff",
               fontWeight: '100',
-              fontSize: 13,
-            }}
-            buttonStyle={styles.cameraButtons}
-            onPress={this._pickImage}
-            title="Camera Roll"/>
-          <Button
-            titleStyle={{
-              color: "#fc7475",
-              fontWeight: '100',
-              fontSize: 13,
-            }}
-            buttonStyle={styles.cameraButtons}
-            onPress={this._takePhoto}
-            title="Take a Photo"/>
-       </View>
-        <StatusBar barStyle="default" />
+            }}>
+            Leave a thought on a picture of yours.{"\n"}
+            Be mindful, you've got { this.state.wordCount > -1 ? this.state.wordCount : 0 } words to use.
+          </Text>
 
-        <Input
-          placeholder='Share your words.'
-          placeholderTextColor='#ccc'
-          onChangeText={(text) =>
-            this.setState({
-              text: text === "" ? null : text,
-              wordCount: 6 - text.split(' ').length ? 6 - text.split(' ').length : 0
-            })}
-          value={this.state.text}
-          shake={true}
-          containerStyle={{
-            // width: 135,
-            // height: 35,
-            backgroundColor: '#7476fc',
-            borderColor: "#fc7475",
-            borderWidth: 1,
-            borderRadius: 100,
-            marginTop: 14
-          }}
-          inputStyle={{ color: "#fff", fontWeight: '300'}}
-        />
-
-        {
-          // Hide submit if word count is too high.
-          ((this.state.wordCount > 0) && this.state.image && this.state.text) &&
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'stretch',
+              justifyContent: 'space-around',
+              marginTop: -8
+            }}>
             <Button
-              onPress={this._uploadPoem}
-              title='Submit'
               titleStyle={{
-                color: "#fff",
+                color: "#fc7475",
                 fontWeight: '100',
                 fontSize: 13,
               }}
-              buttonStyle={{
-                backgroundColor: "#6fe86d",
-                width: 135,
-                height: 35,
-                borderColor: "transparent",
-                borderWidth: 0,
-                borderRadius: 100,
-                marginTop: 15
-              }}/>
-        }
+              buttonStyle={styles.cameraButtons}
+              onPress={this._pickImage}
+              title="Camera Roll"/>
+            <Button
+              titleStyle={{
+                color: "#fc7475",
+                fontWeight: '100',
+                fontSize: 13,
+              }}
+              buttonStyle={styles.cameraButtons}
+              onPress={this._takePhoto}
+              title="Take a Photo"/>
+        </View>
+          <StatusBar barStyle="default" />
 
-        {this._maybeRenderImage()}
-        {this._maybeRenderUploadingOverlay()}
+          <Input
+            placeholder='Share your words.'
+            placeholderTextColor='#ccc'
+            onChangeText={(text) =>
+              this.setState({
+                text: text === "" ? null : text,
+                wordCount: 6 - text.split(' ').length ? 6 - text.split(' ').length : 0
+              })}
+            value={this.state.text}
+            shake={true}
+            containerStyle={{
+              // width: 135,
+              // height: 35,
+              backgroundColor: '#7476fc',
+              borderColor: "#fc7475",
+              borderWidth: 1,
+              borderRadius: 100,
+              marginTop: 14
+            }}
+            inputStyle={{ color: "#fff", fontWeight: '300'}}
+          />
 
+          {
+            // Hide submit if word count is too high.
+            ((this.state.wordCount > 0) && this.state.image && this.state.text) &&
+              <Button
+                onPress={this._uploadPoem}
+                title='Submit'
+                titleStyle={{
+                  color: "#fff",
+                  fontWeight: '100',
+                  fontSize: 13,
+                }}
+                buttonStyle={{
+                  backgroundColor: "#6fe86d",
+                  width: 135,
+                  height: 35,
+                  borderColor: "transparent",
+                  borderWidth: 0,
+                  borderRadius: 100,
+                  marginTop: 15
+                }}/>
+          }
+
+          {this._maybeRenderImage()}
+          {this._maybeRenderUploadingOverlay()}
+
+          </View>
         </View>
     );
   }
