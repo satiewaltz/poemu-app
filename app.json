@@ -1,8 +1,8 @@
 {
   "expo": {
-    "name": "reinspire",
-    "description": "This project is really great.",
-    "slug": "reinspire",
+    "name": "Poemu",
+    "description": "Share your world in 5 words.",
+    "slug": "Poemu",
     "privacy": "public",
     "sdkVersion": "25.0.0",
     "platforms": ["ios", "android"],
