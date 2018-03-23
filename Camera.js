@@ -46,7 +46,7 @@ export default class CameraView extends React.Component {
     image: null,
     uploading: false,
     wordCount: 5,
-    text: ""
+    text: null
   };
 
   render() {
@@ -93,10 +93,6 @@ export default class CameraView extends React.Component {
             onPress={this._takePhoto}
             title="Take a Photo"/>
        </View>
-
-        {this._maybeRenderImage()}
-        {this._maybeRenderUploadingOverlay()}
-
         <StatusBar barStyle="default" />
 
         <Input
@@ -104,7 +100,7 @@ export default class CameraView extends React.Component {
           placeholderTextColor='#ccc'
           onChangeText={(text) =>
             this.setState({
-              text,
+              text: text === "" ? null : text,
               wordCount: 6 - text.split(' ').length ? 6 - text.split(' ').length : 0
             })}
           value={this.state.text}
@@ -123,9 +119,9 @@ export default class CameraView extends React.Component {
 
         {
           // Hide submit if word count is too high.
-          this.state.wordCount > 0 &&
+          ((this.state.wordCount > 0) && this.state.image && this.state.text) &&
             <Button
-              onPress={this._maybeRenderImage}
+              onPress={this._uploadPoem}
               title='Submit'
               titleStyle={{
                 color: "#fff",
@@ -142,6 +138,10 @@ export default class CameraView extends React.Component {
                 marginTop: 15
               }}/>
         }
+
+        {this._maybeRenderImage()}
+        {this._maybeRenderUploadingOverlay()}
+
         </View>
     );
   }
@@ -174,7 +174,7 @@ export default class CameraView extends React.Component {
       <View
         style={{
           marginTop: 30,
-          width: 250,
+          width: 300,
           borderRadius: 3,
           elevation: 2,
           shadowColor: 'rgba(0,0,0,1)',
@@ -191,12 +191,12 @@ export default class CameraView extends React.Component {
           <Image source={{ uri: image }} style={{ width: 250, height: 250 }} />
         </View>
 
-        <Text
+        {/* <Text
           onPress={this._copyToClipboard}
           onLongPress={this._share}
           style={{ paddingVertical: 10, paddingHorizontal: 10 }}>
           {decodeURIComponent(image)}
-        </Text>
+        </Text> */}
       </View>
     );
   };
@@ -232,6 +232,29 @@ export default class CameraView extends React.Component {
     this._handleImagePicked(pickerResult);
   };
 
+  _uploadPoem = async () => {
+    try {
+      this.setState({ uploading: true });
+      if (this.state.image && this.state.text) {
+
+        // console.log(pickerResult, "------------- Selected Image");
+        uploadResponse = await uploadImageAsync(this.state.image, this.state.text);
+        console.log(uploadResponse, 'uploadResonse ===========');
+        // this.setState({ image: uploadResponse.postResponse.location });
+        // this.setState({ image: pickerResult.uri })
+      }
+
+    } catch (e) {
+      console.log({ uploadResponse });
+      console.log({ uploadResult });
+      console.log({ e });
+      alert('Upload failed, sorry :(');
+    } finally {
+      this.setState({ uploading: false });
+    }
+
+  }
+
   _handleImagePicked = async pickerResult => {
     let uploadResponse, uploadResult;
 
@@ -256,7 +279,10 @@ export default class CameraView extends React.Component {
   };
 }
 
-async function uploadImageAsync(uri) {
+
+
+
+async function uploadImageAsync(uri, text) {
   // Note:
   // Uncomment this if you want to experiment with local server
   //
@@ -292,7 +318,8 @@ async function uploadImageAsync(uri) {
       }
 
       axios.post('http://192.168.1.3:3000/addpic', {
-        url: decodeURIComponent(response.body.postResponse.location)
+        url: decodeURIComponent(response.body.postResponse.location),
+        text
       })
       .then(function (response) {
         console.log(response);
