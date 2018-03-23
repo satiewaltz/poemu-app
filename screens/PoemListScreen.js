@@ -7,6 +7,7 @@ import AppHeader from '../elements/Header';
 import { Card, ListItem } from 'react-native-elements';
 import axios from 'axios';
 
+
 export default class PoemListScreen extends React.Component {
   static navigationOptions = {
     title: 'Poems'
@@ -18,7 +19,7 @@ export default class PoemListScreen extends React.Component {
   }
 
   componentDidMount() {
-    axios.get('http://192.168.1.3:3000/pics')
+    axios.get(`https://poemu.now.sh/pics`)
       .then((res) => {
         console.log(res.data);
         this.setState({

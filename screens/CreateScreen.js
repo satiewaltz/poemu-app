@@ -16,16 +16,18 @@ import Exponent, { Constants, ImagePicker, registerRootComponent } from 'expo';
 
 import { Input, Button } from 'react-native-elements';
 import { RNS3 } from 'react-native-aws3';
+import { withNavigation } from 'react-navigation';
 import axios from 'axios'
-import { ACCESS_KEY, SECRET_KEY } from 'react-native-dotenv';
 
 import AppHeader from '../elements/Header';
-
 import Filter from 'bad-words';
+import shortid from 'shortid';
 
-const filter = new Filter({ placeHolder: 'x' });
+import { ACCESS_KEY, SECRET_KEY } from 'react-native-dotenv';
+
 const accessKey = ACCESS_KEY;
 const secretKey = SECRET_KEY;
+const filter = new Filter({ placeHolder: 'x' });
 
 const styles = StyleSheet.create({
   container: {
@@ -256,13 +258,16 @@ export default class CameraView extends React.Component {
   };
 
   _uploadPoem = async () => {
+    let uploadResponse, uploadResult;
+
     try {
       this.setState({ uploading: true });
       if (this.state.image && this.state.text) {
 
         // console.log(pickerResult, "------------- Selected Image");
         uploadResponse = await uploadImageAsync(this.state.image, this.state.text);
-        console.log(uploadResponse, 'uploadResonse ===========');
+
+        this.props.navigation.navigate('PoemList');
         // this.setState({ image: uploadResponse.postResponse.location });
         // this.setState({ image: pickerResult.uri })
       }
@@ -317,7 +322,7 @@ async function uploadImageAsync(uri, text) {
 
     const file = {
       uri,
-      name: 'photo.jpg',
+      name: shortid.generate() + '.jpg',
       type: 'image/jpeg'
     };
 
@@ -340,7 +345,7 @@ async function uploadImageAsync(uri, text) {
         throw new Error('Failed to upload image to S3', response);
       }
 
-      axios.post('http://192.168.1.3:3000/addpic', {
+      axios.post(`https://poemu.now.sh/addpic`, {
         url: decodeURIComponent(response.body.postResponse.location),
         text: filter.clean(text)
       })
